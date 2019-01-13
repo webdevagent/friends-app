@@ -3,6 +3,7 @@ const letterSortBlock=document.querySelector('.abc');
 const genderSortBlock=document.querySelector('.gender');
 const ageSortBlock=document.querySelector('.age');
 const reset=document.querySelector('.reset');
+let reserArray;
 const nameSearch=document.querySelector('.myInput');
 const FRIENDS_API_URL="https://randomuser.me/api/?results=40";
 const getFriendsData=fetch(FRIENDS_API_URL);
@@ -31,6 +32,7 @@ function makeProfileCard(person){
   let email=document.createElement('p');
   picture.src=person.picture.large;
   flipBox.personName=`${person.name.first}`;
+  flipBox.personAge=+`${person.dob.age}`;
   nameFront.textContent=`${person.name.first} ${person.name.last}`;
   nameBack.textContent=`Name: ${person.name.first} ${person.name.last}`;
   age.textContent=`Age: ${person.dob.age}`;
@@ -70,6 +72,7 @@ getFriendsData.then(response => response.json())
   .then(data => {
     dataContainer=data.results;
     fillUsers(data.results);
+    reserArray=Users.slice();
   });
 
   friendsContainer.addEventListener('click',flipCard);
@@ -191,3 +194,43 @@ function sortListDirD() {
     }
   }
 }
+//agesorting
+ageSortBlock.addEventListener('click',(el)=>{
+    if(el.target.className=='full-age')Users.sort(ageSortMG);
+    else {Users.sort(ageSortGM);
+      console.log('hey');
+    }
+    while (friendsContainer.firstChild) {
+      friendsContainer.removeChild(friendsContainer.firstChild);
+    }
+    Users.forEach(num=>{
+      friendsContainer.appendChild(num)}
+       );
+  });
+ function ageSortMG(a,b){
+  return  a.personAge-b.personAge;
+}
+function ageSortGM(a,b){
+  return b.personAge-a.personAge;
+}
+//genderSorting
+genderSortBlock.addEventListener('click',({target})=>{
+  let sortedArray
+  if(target.className=='male')sortedArray=Users.filter(num=>num.gender=='male');
+  else if(target.className=='female')sortedArray=Users.filter(num=>num.gender=='female');
+  else sortedArray=Users;
+      while (friendsContainer.firstChild) {
+        friendsContainer.removeChild(friendsContainer.firstChild);}
+      sortedArray.forEach(num=>{
+        friendsContainer.appendChild(num)}
+         );
+
+})
+//reset
+reset.addEventListener('click',({target})=>{
+  if(target.tagName!='div')
+  while (friendsContainer.firstChild) {
+    friendsContainer.removeChild(friendsContainer.firstChild);}
+    reserArray.forEach(num=>friendsContainer.appendChild(num));
+
+})
