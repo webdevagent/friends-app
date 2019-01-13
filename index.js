@@ -1,8 +1,14 @@
 const friendsContainer=document.querySelector('.friends');
+const hideButton=document.querySelector('.hide');
+const openButton=document.querySelector('.open');
 const letterSortBlock=document.querySelector('.abc');
 const genderSortBlock=document.querySelector('.gender');
+const navigation=document.querySelector('.navigation')
 const ageSortBlock=document.querySelector('.age');
 const reset=document.querySelector('.reset');
+const navBar=document.querySelector('.nav-bar');
+let arrayOfAddFriends=[];
+let saveArray=Array(40).fill(0);
 let reserArray;
 const nameSearch=document.querySelector('.myInput');
 const FRIENDS_API_URL="https://randomuser.me/api/?results=40";
@@ -30,6 +36,9 @@ function makeProfileCard(person){
   let age=document.createElement('p');
   let image=document.createElement('p');
   let email=document.createElement('p');
+  let addFriend=document.createElement('p');
+  addFriend.classList.add('add-friend');
+  addFriend.textContent='connect';
   picture.src=person.picture.large;
   flipBox.personName=`${person.name.first}`;
   flipBox.personAge=+`${person.dob.age}`;
@@ -38,7 +47,7 @@ function makeProfileCard(person){
   age.textContent=`Age: ${person.dob.age}`;
   email.textContent=`Email: ${person.email}`;
   flipBox.gender=person.gender;
-  [picture,nameFront].forEach(num=>flipBoxFront.appendChild(num));
+  [picture,nameFront,addFriend].forEach(num=>flipBoxFront.appendChild(num));
   [nameBack, age, email].forEach(num=>flipBoxBack.appendChild(num));
   [flipBoxFront, flipBoxBack].forEach(num => flipBoxInner.appendChild(num));
   flipBox.appendChild(flipBoxInner);
@@ -73,17 +82,22 @@ getFriendsData.then(response => response.json())
     dataContainer=data.results;
     fillUsers(data.results);
     reserArray=Users.slice();
+
   });
 
   friendsContainer.addEventListener('click',flipCard);
   function flipCard({target}){
-    if(target.className!='friends'){
+    if(target.className!='friends'&&target.className!='add-friend'){
     friendsContainer.querySelector(`.flip-box-inner[data-order='${target.dataset.order}']`).classList.toggle('clicked');
-    }
+  }if(target.className=='add-friend'&&target.textContent!='sent'){
+    ('sent');
+    arrayOfAddFriends.push(friendsContainer.querySelector(`.flip-box[data-order='${target.dataset.order}']`));
+    target.textContent='sent';
+  }
   }
   nameSearch.addEventListener('keyup',inputSearch);
   function inputSearch({target}){
-    console.log('hello');
+    ('hello');
     let value=target.value.toUpperCase();
     let names=friendsContainer.querySelectorAll('.name');
     names.forEach(num=>{
@@ -96,7 +110,7 @@ getFriendsData.then(response => response.json())
   }
 
   letterSortBlock.addEventListener('click',(ev)=>{
-    console.log(ev.target.className);
+    (ev.target.className);
     if(ev.target.className=='a-z')sortListDir();
     else sortListDirD();
       });
@@ -106,9 +120,9 @@ getFriendsData.then(response => response.json())
        Users.sort(compare);
 
        Users.forEach((num,i)=>{
-         console.log(num.personName);
+         (num.personName);
          allFriendsCards[i].personName=num.personName;
-         console.log(allFriendsCards[i].personName);
+         (allFriendsCards[i].personName);
        });
   }
   }
@@ -124,36 +138,20 @@ function sortListDir() {
   var list, i, switching, b, shouldSwitch;
   list = friendsContainer;
   switching = true;
-
-  // Set the sorting direction to ascending:
-  // Make a loop that will continue until no switching has been done:
   while (switching) {
-    // Start by saying: no switching is done:
     switching = false;
     b = friendsContainer.getElementsByClassName("flip-box");
-
-    // Loop through all list-items:
     for (i = 0; i < (b.length - 1); i++) {
-      // Start by saying there should be no switching:
       shouldSwitch = false;
-      /* Check if the next item should switch place with the current item,
-      based on the sorting direction (asc or desc): */
-
         if (b[i].personName.toLowerCase() > b[i + 1].personName.toLowerCase()) {
-          /* If next item is alphabetically lower than current item,
-          mark as a switch and break the loop: */
           shouldSwitch = true;
           break;
         }
       }
     if (shouldSwitch) {
-      console.log('hello');
-      /* If a switch has been marked, make the switch
-      and mark that a switch has been done: */
+      ('hello');
       b[i].parentNode.insertBefore(b[i + 1], b[i]);
       switching = true;
-      // Each time a switch is done, increase switchcount by 1:
-
     }
   }
 }
@@ -161,44 +159,29 @@ function sortListDirD() {
   var list, i, switching, b, shouldSwitch;
   list = friendsContainer;
   switching = true;
-
-  // Set the sorting direction to ascending:
-  // Make a loop that will continue until no switching has been done:
   while (switching) {
-    // Start by saying: no switching is done:
     switching = false;
     b = friendsContainer.getElementsByClassName("flip-box");
-
-    // Loop through all list-items:
     for (i = 0; i < (b.length - 1); i++) {
-      // Start by saying there should be no switching:
       shouldSwitch = false;
-      /* Check if the next item should switch place with the current item,
-      based on the sorting direction (asc or desc): */
-
         if (b[i].personName.toLowerCase() <b[i + 1].personName.toLowerCase()) {
-          /* If next item is alphabetically lower than current item,
-          mark as a switch and break the loop: */
           shouldSwitch = true;
           break;
         }
       }
     if (shouldSwitch) {
-      console.log('hello');
-      /* If a switch has been marked, make the switch
-      and mark that a switch has been done: */
+      ('hello');
+
       b[i].parentNode.insertBefore(b[i + 1], b[i]);
       switching = true;
-      // Each time a switch is done, increase switchcount by 1:
-
     }
   }
 }
-//agesorting
+
 ageSortBlock.addEventListener('click',(el)=>{
     if(el.target.className=='full-age')Users.sort(ageSortMG);
     else {Users.sort(ageSortGM);
-      console.log('hey');
+      ('hey');
     }
     while (friendsContainer.firstChild) {
       friendsContainer.removeChild(friendsContainer.firstChild);
@@ -226,11 +209,43 @@ genderSortBlock.addEventListener('click',({target})=>{
          );
 
 })
-//reset
+
 reset.addEventListener('click',({target})=>{
   if(target.tagName!='div')
   while (friendsContainer.firstChild) {
     friendsContainer.removeChild(friendsContainer.firstChild);}
     reserArray.forEach(num=>friendsContainer.appendChild(num));
+
+})
+hideButton.addEventListener('click',({target})=>{
+  openButton.classList.remove('remove-card');
+  document.querySelector('.navigation').classList.add('remove-card');
+  openButton.classList.add('forOpen');
+});
+openButton.addEventListener('click',({target})=>{
+  openButton.classList.add('remove-card');
+  navigation.classList.remove('remove-card');
+  openButton.classList.remove('forOpen');
+});
+navBar.addEventListener('click',({target})=>{
+  if(target.className=='request'){
+    while (friendsContainer.firstChild) {
+      friendsContainer.removeChild(friendsContainer.firstChild);}
+      arrayOfAddFriends.forEach(num=>friendsContainer.appendChild(num));
+      document.querySelector('.home-information').classList.remove('show-block');
+      document.querySelector('.home-information').classList.add('remove-card');
+  }
+  if(target.className=='people'){
+    while (friendsContainer.firstChild) {
+      friendsContainer.removeChild(friendsContainer.firstChild);}
+      reserArray.forEach(num=>friendsContainer.appendChild(num));
+      document.querySelector('.home-information').classList.remove('show-block');
+      document.querySelector('.home-information').classList.add('remove-card');
+  }
+  if(target.className=='home'){
+    while (friendsContainer.firstChild) {
+      friendsContainer.removeChild(friendsContainer.firstChild);}
+      document.querySelector('.home-information').classList.add('show-block');
+  }
 
 })
