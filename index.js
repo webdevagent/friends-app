@@ -14,11 +14,6 @@ const nameSearch=document.querySelector('.myInput');
 const FRIENDS_API_URL="https://randomuser.me/api/?results=40";
 const getFriendsData=fetch(FRIENDS_API_URL);
 let allFriendsCards;
-function createElement(element,className,parrent){
-  let newElement=document.createElement(element);
-  newElement.classList.add(className);
-  return newElement;
-}
 function createCard(element, className) {
   let card = document.createElement(element);
   card.classList.add(className);
