@@ -65,18 +65,20 @@ getFriendsData.then(response => response.json())
   });
 
 friendsContainer.addEventListener('click', flipCard);
+nameSearch.addEventListener('keyup', inputSearch);
 
 function flipCard({target}) {
+  let innerCard=friendsContainer.querySelector(`.flip-box-inner[data-order='${target.dataset.order}']`);
+  let boxCard=friendsContainer.querySelector(`.flip-box[data-order='${target.dataset.order}']`);
   if (target.className != 'friends' && target.className != 'add-friend') {
-    friendsContainer.querySelector(`.flip-box-inner[data-order='${target.dataset.order}']`).classList.toggle('clicked');
+    innerCard.classList.toggle('clicked');
   }
   if (target.className == 'add-friend' && target.textContent != 'sent') {
     ('sent');
-    arrayOfAddFriends.push(friendsContainer.querySelector(`.flip-box[data-order='${target.dataset.order}']`));
+    arrayOfAddFriends.push(boxCard);
     target.textContent = 'sent';
   }
 }
-nameSearch.addEventListener('keyup', inputSearch);
 
 function inputSearch({target}) {
   ('hello');
