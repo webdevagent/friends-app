@@ -81,7 +81,6 @@ function flipCard({target}) {
 }
 
 function inputSearch({target}) {
-  ('hello');
   let value = target.value.toUpperCase();
   let names = friendsContainer.querySelectorAll('.name');
   names.forEach(num => {
@@ -93,36 +92,9 @@ function inputSearch({target}) {
   })
 }
 
-letterSortBlock.addEventListener('click', (ev) => {
-  (ev.target.className);
-  if (ev.target.className == 'a-z') sortListDir();
-  else sortListDirD();
-});
+letterSortBlock.addEventListener('click',sortListDir);
 
-function sortUsers({target}) {
-  if (target.className != ('abc')) {
-
-    Users.sort(compare);
-
-    Users.forEach((num, i) => {
-      (num.personName);
-      allFriendsCards[i].personName = num.personName;
-      (allFriendsCards[i].personName);
-    });
-  }
-}
-
-function compare(a, b) {
-  if (a.personName < b.personName) return -1;
-  if (a.personName > b.personName) return 1;
-}
-
-function changeCard(filterArray, dataNum) {
-  setDataOrder(filterArray, dataNum);
-
-}
-
-function sortListDir() {
+function sortListDir({target}) {
   var list, i, switching, b, shouldSwitch;
   list = friendsContainer;
   switching = true;
@@ -131,36 +103,17 @@ function sortListDir() {
     b = friendsContainer.getElementsByClassName("flip-box");
     for (i = 0; i < (b.length - 1); i++) {
       shouldSwitch = false;
-      if (b[i].personName.toLowerCase() > b[i + 1].personName.toLowerCase()) {
+      if (b[i].personName.toLowerCase() > b[i + 1].personName.toLowerCase()&&target.className=='a-z') {
+        shouldSwitch = true;
+        break;
+      }
+      if (b[i].personName.toLowerCase() < b[i + 1].personName.toLowerCase()&&target.className=='z-a') {
         shouldSwitch = true;
         break;
       }
     }
     if (shouldSwitch) {
       ('hello');
-      b[i].parentNode.insertBefore(b[i + 1], b[i]);
-      switching = true;
-    }
-  }
-}
-
-function sortListDirD() {
-  var list, i, switching, b, shouldSwitch;
-  list = friendsContainer;
-  switching = true;
-  while (switching) {
-    switching = false;
-    b = friendsContainer.getElementsByClassName("flip-box");
-    for (i = 0; i < (b.length - 1); i++) {
-      shouldSwitch = false;
-      if (b[i].personName.toLowerCase() < b[i + 1].personName.toLowerCase()) {
-        shouldSwitch = true;
-        break;
-      }
-    }
-    if (shouldSwitch) {
-      ('hello');
-
       b[i].parentNode.insertBefore(b[i + 1], b[i]);
       switching = true;
     }
@@ -171,14 +124,8 @@ ageSortBlock.addEventListener('click', (el) => {
   if (el.target.className == 'full-age') Users.sort(ageSortMG);
   else {
     Users.sort(ageSortGM);
-    ('hey');
   }
-  while (friendsContainer.firstChild) {
-    friendsContainer.removeChild(friendsContainer.firstChild);
-  }
-  Users.forEach(num => {
-    friendsContainer.appendChild(num)
-  });
+  renderNewFlist(Users);
 });
 
 function ageSortMG(a, b) {
@@ -194,23 +141,14 @@ genderSortBlock.addEventListener('click', ({target}) => {
   if (target.className == 'male') sortedArray = Users.filter(num => num.gender == 'male');
   else if (target.className == 'female') sortedArray = Users.filter(num => num.gender == 'female');
   else sortedArray = Users;
-  while (friendsContainer.firstChild) {
-    friendsContainer.removeChild(friendsContainer.firstChild);
-  }
-  sortedArray.forEach(num => {
-    friendsContainer.appendChild(num)
-  });
-
+  renderNewFlist(sortedArray);
 })
 
 reset.addEventListener('click', ({target}) => {
   if (target.tagName != 'div')
-    while (friendsContainer.firstChild) {
-      friendsContainer.removeChild(friendsContainer.firstChild);
-    }
-  reserArray.forEach(num => friendsContainer.appendChild(num));
-
+  renderNewFlist(reserArray);
 })
+
 hideButton.addEventListener('click', ({target}) => {
   openButton.classList.remove('remove-card');
   document.querySelector('.navigation').classList.add('remove-card');
@@ -221,27 +159,30 @@ openButton.addEventListener('click', ({target}) => {
   navigation.classList.remove('remove-card');
   openButton.classList.remove('forOpen');
 });
+
 navBar.addEventListener('click', ({target}) => {
-  if (target.className == 'request') {
-    while (friendsContainer.firstChild) {
-      friendsContainer.removeChild(friendsContainer.firstChild);
-    }
-    arrayOfAddFriends.forEach(num => friendsContainer.appendChild(num));
+  function classChanger(friends){
     document.querySelector('.home-information').classList.remove('show-block');
-    document.querySelector('.home-information').classList.add('remove-card');
+    if(friends=='home')document.querySelector('.home-information').classList.add('show-block');
+    else document.querySelector('.home-information').classList.add('remove-block');
+  }
+  if (target.className == 'request') {
+    renderNewFlist(arrayOfAddFriends);
+    classChanger();
   }
   if (target.className == 'people') {
-    while (friendsContainer.firstChild) {
-      friendsContainer.removeChild(friendsContainer.firstChild);
-    }
-    reserArray.forEach(num => friendsContainer.appendChild(num));
-    document.querySelector('.home-information').classList.remove('show-block');
-    document.querySelector('.home-information').classList.add('remove-card');
+    renderNewFlist(reserArray);
+    classChanger();
   }
   if (target.className == 'home') {
-    while (friendsContainer.firstChild) {
-      friendsContainer.removeChild(friendsContainer.firstChild);
-    }
-    document.querySelector('.home-information').classList.add('show-block');
+    renderNewFlist();
+    classChanger('home');
   }
 })
+
+function renderNewFlist(pushArray){
+  while (friendsContainer.firstChild) {
+    friendsContainer.removeChild(friendsContainer.firstChild);
+  }
+  if(pushArray!=undefined)pushArray.forEach(num => friendsContainer.appendChild(num));
+}
