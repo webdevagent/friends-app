@@ -10,6 +10,7 @@ p,h2,h3{
   top: 0;
   left:0;
   width: 100%;
+
   background-color:#fff;
 }
 .flip-box {
@@ -71,7 +72,8 @@ p,h2,h3{
   transform: rotateY(180deg);
 }
 .friends{
-  margin-top: 150px;
+  position: absolute;
+  top:21%;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -91,6 +93,7 @@ body{
 ul{
   display: flex;
   justify-content: center;
+  padding: 0;
 }
 ul li{
   display: inline-block;
@@ -173,4 +176,7 @@ h1{
 }
 .show-block{
   display: block!important;
+}
+.nav-bar{
+  width: 100%;
 }
