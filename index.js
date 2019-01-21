@@ -5,7 +5,6 @@ const navBar = document.querySelector('.nav-bar');
 const Users = Array(40).fill(0);
 let arrayOfAddFriends = [];
 let resetArray;
-const nameSearch = document.querySelector('.myInput');
 const FRIENDS_API_URL = "https://randomuser.me/api/?results=40";
 const getFriendsData = fetch(FRIENDS_API_URL);
 
