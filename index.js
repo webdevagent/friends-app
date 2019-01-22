@@ -2,7 +2,7 @@ const friendsContainer = document.querySelector('.friends');
 const openButton = document.querySelector('.open');
 const navigation = document.querySelector('.navigation');
 const navBar = document.querySelector('.nav-bar');
-let Users = Array(40).fill(0);
+const Users = Array(40).fill(0);
 let arrayOfAddFriends = [];
 let resetArray;
 const FRIENDS_API_URL = "https://randomuser.me/api/?results=40";
@@ -23,9 +23,9 @@ navigation.addEventListener('click', ({target}) => {
   };
   if (target.className == 'male' || target.className == 'female' || target.className == 'both') {
     let sortedArray;
-    (target.className == 'male') ? Users = resetArray.filter(num => num.gender == 'male'):
-      (target.className == 'female') ? Users = resetArray.filter(num => num.gender == 'female') : Users = resetArray;
-    renderNewFlist(Users);
+    (target.className == 'male') ? sortedArray = Users.filter(num => num.gender == 'male'):
+      (target.className == 'female') ? sortedArray = Users.filter(num => num.gender == 'female') : sortedArray = Users;
+    renderNewFlist(sortedArray);
   }
   if (target.className == 'reset') renderNewFlist(resetArray);
   if (target.className == 'hide') {
@@ -129,8 +129,29 @@ function inputSearch({target}) {
 };
 
 function sortListDir(target) {
-   Users.sort((a,b)=>(a.personName>b.personName)?1:-1);
-   renderNewFlist(Users);
+  let list, count, switching, mainCard, shouldSwitch;
+  list = friendsContainer;
+  switching = true;
+  while (switching) {
+    switching = false;
+    mainCard = friendsContainer.getElementsByClassName("flip-box");
+    for (count = 0; count < (mainCard.length - 1); count++) {
+      shouldSwitch = false;
+      if (mainCard[count].personName.toLowerCase() > mainCard[count + 1].personName.toLowerCase() && target.className == 'a-z') {
+        shouldSwitch = true;
+        break;
+      }
+      if (mainCard[count].personName.toLowerCase() < mainCard[count + 1].personName.toLowerCase() && target.className == 'z-a') {
+        shouldSwitch = true;
+        break;
+      }
+    }
+    if (shouldSwitch) {
+      ('hello');
+      mainCard[count].parentNode.insertBefore(mainCard[count + 1], mainCard[count]);
+      switching = true;
+    }
+  }
 };
 
 function ageSortMG(a, b) {
