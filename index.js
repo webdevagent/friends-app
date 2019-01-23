@@ -21,10 +21,10 @@ navigation.addEventListener('click', ({target}) => {
     (target.className == 'full-age') ? Users.sort(ageSortMG): Users.sort(ageSortGM);
     renderNewFlist(Users);
   };
-  if (target.className == 'male' || target.className == 'female' || target.className == 'both') {
+  if (target.className == 'male' || target.className == 'female') {
     let sortedArray;
     (target.className == 'male') ? Users = resetArray.filter(num => num.gender == 'male'):
-      (target.className == 'female') ? Users = resetArray.filter(num => num.gender == 'female') : Users = resetArray;
+      Users = resetArray.filter(num => num.gender == 'female');
     renderNewFlist(Users);
   }
   if (target.className == 'reset') renderNewFlist(resetArray);
@@ -44,9 +44,8 @@ openButton.addEventListener('click', ({target}) => {
 
 navBar.addEventListener('click', ({target}) => {
   function classChanger(friends) {
-    document.querySelector('.home-information').classList.remove('show-block');
-    if (friends == 'home') document.querySelector('.home-information').classList.add('show-block');
-    else document.querySelector('.home-information').classList.add('remove-block');
+    if (friends == 'home') document.querySelectorAll('.navigation,.open').forEach(num => num.classList.remove('remove-card'));
+    else document.querySelectorAll('.navigation,.open').forEach(num => num.classList.add('remove-card'));
   }
   if (target.className == 'request') {
     renderNewFlist(arrayOfAddFriends);
@@ -54,10 +53,6 @@ navBar.addEventListener('click', ({target}) => {
   }
   if (target.className == 'people') {
     renderNewFlist(resetArray);
-    classChanger();
-  }
-  if (target.className == 'home') {
-    renderNewFlist();
     classChanger('home');
   }
 });
@@ -82,7 +77,7 @@ function makeProfileCard(person) {
   let email = createCard('p', '', flipBoxBack);
   addFriend.textContent = 'connect';
   picture.src = person.picture.large;
-  flipBox.personName = `${person.name.first}`;
+  flipBox.personName = `${person.name.first}${person.name.last}`;
   flipBox.personAge = +`${person.dob.age}`;
   nameFront.textContent = `${person.name.first} ${person.name.last}`;
   nameBack.textContent = `Name: ${person.name.first} ${person.name.last}`;
@@ -129,8 +124,9 @@ function inputSearch({target}) {
 };
 
 function sortListDir(target) {
-   Users.sort((a,b)=>(a.personName>b.personName)?1:-1);
-   renderNewFlist(Users);
+  (target.className == 'a-z') ? Users.sort((a, b) => (a.personName > b.personName) ? 1 : -1):
+    Users.sort((a, b) => (a.personName > b.personName) ? 1 : -1).reverse();
+  renderNewFlist(Users);
 };
 
 function ageSortMG(a, b) {
