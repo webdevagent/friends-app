@@ -1,21 +1,23 @@
-const friendsContainer = document.querySelector('.friends');
-const openButton = document.querySelector('.open');
-const navigation = document.querySelector('.navigation');
-const navBar = document.querySelector('.nav-bar');
 let Users = [];
 let arrayOfAddFriends = [];
 let resetArray;
 const FRIENDS_API_URL = "https://randomuser.me/api/?results=40";
 const getFriendsData = fetch(FRIENDS_API_URL);
+const appData={
+   friendsContainer:document.querySelector('.friends'),
+   openButton: document.querySelector('.open'),
+   navigation: document.querySelector('.navigation'),
+   navBar:document.querySelector('.nav-bar')
+ }
 
 getFriendsData.then(response => response.json())
   .then(data => {
     fillUsers(data.results);
     resetArray = Users.slice();
   });
-friendsContainer.addEventListener('click', flipCard);
+appData.friendsContainer.addEventListener('click', flipCard);
 
-navigation.addEventListener('click', ({target}) => {
+appData.navigation.addEventListener('click', ({target}) => {
   if (target.className == 'a-z' || target.className == 'z-a') sortListDir(target);
   if (target.className == 'full-age' || target.className == 'not-full') {
     (target.className == 'full-age') ? Users.sort(ageSortMG): Users.sort(ageSortGM);
@@ -29,20 +31,20 @@ navigation.addEventListener('click', ({target}) => {
   }
   if (target.className == 'reset') renderNewFlist(resetArray);
   if (target.className == 'hide') {
-    openButton.classList.remove('remove-card');
-    navigation.classList.add('remove-card');
-    openButton.classList.add('forOpen');
+    appData.openButton.classList.remove('remove-card');
+    appData.navigation.classList.add('remove-card');
+    appData.openButton.classList.add('forOpen');
   }
 });
 
-navigation.addEventListener('keyup', inputSearch);
-openButton.addEventListener('click', ({target}) => {
-  openButton.classList.add('remove-card');
-  navigation.classList.remove('remove-card');
-  openButton.classList.remove('forOpen');
+appData.navigation.addEventListener('keyup', inputSearch);
+appData.openButton.addEventListener('click', ({target}) => {
+  appData.openButton.classList.add('remove-card');
+  appData.navigation.classList.remove('remove-card');
+  appData.openButton.classList.remove('forOpen');
 });
 
-navBar.addEventListener('click', ({target}) => {
+appData.navBar.addEventListener('click', ({target}) => {
   function classChanger(friends) {
     if (friends == 'home') document.querySelectorAll('.navigation,.open').forEach(num => num.classList.remove('remove-card'));
     else document.querySelectorAll('.navigation,.open').forEach(num => num.classList.add('remove-card'));
@@ -65,7 +67,7 @@ function createCard(element, className, parrent) {
 };
 
 function makeProfileCard(person) {
-  let flipBox = createCard('div', 'flip-box', friendsContainer);
+  let flipBox = createCard('div', 'flip-box', appData.friendsContainer);
   let flipBoxInner = createCard('div', 'flip-box-inner', flipBox);
   let flipBoxFront = createCard('div', 'flip-box-front', flipBoxInner);
   let flipBoxBack = createCard('div', 'flip-box-back', flipBoxInner);
@@ -97,8 +99,8 @@ function fillUsers(userData) {
 };
 
 function flipCard({target}) {
-  let innerCard = friendsContainer.querySelector(`.flip-box-inner[data-order='${target.dataset.order}']`);
-  let boxCard = friendsContainer.querySelector(`.flip-box[data-order='${target.dataset.order}']`);
+  let innerCard = appData.friendsContainer.querySelector(`.flip-box-inner[data-order='${target.dataset.order}']`);
+  let boxCard = appData.friendsContainer.querySelector(`.flip-box[data-order='${target.dataset.order}']`);
   if (target.className != 'friends' && target.className != 'add-friend') {
     innerCard.classList.toggle('clicked');
   }
@@ -112,12 +114,12 @@ function flipCard({target}) {
 function inputSearch({target}) {
   if (target.className == 'myInput') {
     let value = target.value.toUpperCase();
-    let names = friendsContainer.querySelectorAll('.name');
+    let names = appData.friendsContainer.querySelectorAll('.name');
     names.forEach(num => {
       if (num.textContent.toUpperCase().indexOf(value) > -1) {
-        friendsContainer.querySelector(`.flip-box[data-order='${num.dataset.order}']`).classList.remove('remove-card');
+        appData.friendsContainer.querySelector(`.flip-box[data-order='${num.dataset.order}']`).classList.remove('remove-card');
       } else {
-        friendsContainer.querySelector(`.flip-box[data-order='${num.dataset.order}']`).classList.add('remove-card');
+        appData.friendsContainer.querySelector(`.flip-box[data-order='${num.dataset.order}']`).classList.add('remove-card');
       }
     })
   }
@@ -138,8 +140,8 @@ function ageSortGM(a, b) {
 };
 
 function renderNewFlist(pushArray) {
-  while (friendsContainer.firstChild) {
-    friendsContainer.removeChild(friendsContainer.firstChild);
+  while (appData.friendsContainer.firstChild) {
+    appData.friendsContainer.removeChild(appData.friendsContainer.firstChild);
   }
-  if (pushArray != undefined) pushArray.forEach(num => friendsContainer.appendChild(num));
+  if (pushArray != undefined) pushArray.forEach(num => appData.friendsContainer.appendChild(num));
 };
