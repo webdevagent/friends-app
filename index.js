@@ -2,7 +2,7 @@ const friendsContainer = document.querySelector('.friends');
 const openButton = document.querySelector('.open');
 const navigation = document.querySelector('.navigation');
 const navBar = document.querySelector('.nav-bar');
-let Users = Array(40).fill(0);
+let Users = [];
 let arrayOfAddFriends = [];
 let resetArray;
 const FRIENDS_API_URL = "https://randomuser.me/api/?results=40";
@@ -88,8 +88,8 @@ function makeProfileCard(person) {
 };
 
 function fillUsers(userData) {
-  Users.forEach((num, i) => {
-    Users[i] = makeProfileCard(userData[i]);
+    userData.forEach((num, i) => {
+    Users.push(makeProfileCard(num));
     Users[i].dataset.order = i;
     ['.flip-box-inner', '.flip-box-front', '.flip-box-back', 'img'].forEach(num => Users[i].querySelector(num).dataset.order = i);
     Users[i].querySelectorAll('p').forEach(num => num.dataset.order = i);
