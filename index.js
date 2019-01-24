@@ -1,6 +1,3 @@
-let Users = [];
-let arrayOfAddFriends = [];
-let resetArray;
 const FRIENDS_API_URL = "https://randomuser.me/api/?results=40";
 const getFriendsData = fetch(FRIENDS_API_URL);
 const appData={
@@ -9,55 +6,15 @@ const appData={
    navigation: document.querySelector('.navigation'),
    navBar:document.querySelector('.nav-bar')
  }
+ let Users = [];
+ let arrayOfAddFriends = [];
+ let resetArray;
 
 getFriendsData.then(response => response.json())
   .then(data => {
     fillUsers(data.results);
     resetArray = Users.slice();
   });
-appData.friendsContainer.addEventListener('click', flipCard);
-
-appData.navigation.addEventListener('click', ({target}) => {
-  if (target.className == 'a-z' || target.className == 'z-a') sortListDir(target);
-  if (target.className == 'full-age' || target.className == 'not-full') {
-    (target.className == 'full-age') ? Users.sort(ageSortMG): Users.sort(ageSortGM);
-    renderNewFlist(Users);
-  };
-  if (target.className == 'male' || target.className == 'female') {
-    let sortedArray;
-    (target.className == 'male') ? Users = resetArray.filter(num => num.gender == 'male'):
-      Users = resetArray.filter(num => num.gender == 'female');
-    renderNewFlist(Users);
-  }
-  if (target.className == 'reset') renderNewFlist(resetArray);
-  if (target.className == 'hide') {
-    appData.openButton.classList.remove('remove-card');
-    appData.navigation.classList.add('remove-card');
-    appData.openButton.classList.add('forOpen');
-  }
-});
-
-appData.navigation.addEventListener('keyup', inputSearch);
-appData.openButton.addEventListener('click', ({target}) => {
-  appData.openButton.classList.add('remove-card');
-  appData.navigation.classList.remove('remove-card');
-  appData.openButton.classList.remove('forOpen');
-});
-
-appData.navBar.addEventListener('click', ({target}) => {
-  function classChanger(friends) {
-    if (friends == 'home') document.querySelectorAll('.navigation,.open').forEach(num => num.classList.remove('remove-card'));
-    else document.querySelectorAll('.navigation,.open').forEach(num => num.classList.add('remove-card'));
-  }
-  if (target.className == 'request') {
-    renderNewFlist(arrayOfAddFriends);
-    classChanger();
-  }
-  if (target.className == 'people') {
-    renderNewFlist(resetArray);
-    classChanger('home');
-  }
-});
 
 function createCard(element, className, parrent) {
   let card = document.createElement(element);
@@ -145,3 +102,47 @@ function renderNewFlist(pushArray) {
   }
   if (pushArray != undefined) pushArray.forEach(num => appData.friendsContainer.appendChild(num));
 };
+
+appData.friendsContainer.addEventListener('click', flipCard);
+
+appData.navigation.addEventListener('click', ({target}) => {
+  if (target.className == 'a-z' || target.className == 'z-a') sortListDir(target);
+  if (target.className == 'full-age' || target.className == 'not-full') {
+    (target.className == 'full-age') ? Users.sort(ageSortMG): Users.sort(ageSortGM);
+    renderNewFlist(Users);
+  };
+  if (target.className == 'male' || target.className == 'female') {
+    let sortedArray;
+    (target.className == 'male') ? Users = resetArray.filter(num => num.gender == 'male'):
+      Users = resetArray.filter(num => num.gender == 'female');
+    renderNewFlist(Users);
+  }
+  if (target.className == 'reset') renderNewFlist(resetArray);
+  if (target.className == 'hide') {
+    appData.openButton.classList.remove('remove-card');
+    appData.navigation.classList.add('remove-card');
+    appData.openButton.classList.add('forOpen');
+  }
+});
+
+appData.navigation.addEventListener('keyup', inputSearch);
+appData.openButton.addEventListener('click', ({target}) => {
+  appData.openButton.classList.add('remove-card');
+  appData.navigation.classList.remove('remove-card');
+  appData.openButton.classList.remove('forOpen');
+});
+
+appData.navBar.addEventListener('click', ({target}) => {
+  function classChanger(friends) {
+    if (friends == 'home') document.querySelectorAll('.navigation,.open').forEach(num => num.classList.remove('remove-card'));
+    else document.querySelectorAll('.navigation,.open').forEach(num => num.classList.add('remove-card'));
+  }
+  if (target.className == 'request') {
+    renderNewFlist(arrayOfAddFriends);
+    classChanger();
+  }
+  if (target.className == 'people') {
+    renderNewFlist(resetArray);
+    classChanger('home');
+  }
+});
