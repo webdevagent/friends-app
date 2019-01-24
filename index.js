@@ -14,7 +14,7 @@ const appData={
 getFriendsData.then(response => response.json())
   .then(data => {
     fillUsers(data.results);
-    resetArray = Users.forEach(num=>resetArray.push(num));
+    Users.forEach(num=>resetArray.push(num));
   }).catch(error => console.log(error));
 
 function createCard(element, className, parrent) {
@@ -104,9 +104,18 @@ function renderNewFlist(pushArray) {
   if (pushArray != undefined) pushArray.forEach(num => appData.friendsContainer.appendChild(num));
 };
 
-appData.friendsContainer.addEventListener('click', flipCard);
+ function tabChanger({target}){
+  if (target.className == 'request') {
+    renderNewFlist(arrayOfAddFriends);
+    classChanger(document.querySelectorAll('.navigation,.open'));
+  }
+  if (target.className == 'people') {
+    renderNewFlist(resetArray);
+    classChanger(false,document.querySelectorAll('.navigation,.open'));
+  }
+};
 
-appData.navigation.addEventListener('click', ({target}) => {
+function usersFilter({target}){
   if (target.className == 'a-z' || target.className == 'z-a') sortListDir(target);
   if (target.className == 'full-age' || target.className == 'not-full') {
     (target.className == 'full-age') ? Users.sort(ageSortMG): Users.sort(ageSortGM);
@@ -119,42 +128,16 @@ appData.navigation.addEventListener('click', ({target}) => {
     renderNewFlist(Users);
   }
   if (target.className == 'reset') renderNewFlist(resetArray);
-  if (target.className == 'hide') {
-    appData.openButton.classList.remove('remove-card');
-    appData.navigation.classList.add('remove-card');
-    appData.openButton.classList.add('forOpen');
-  }
-});
+  if (target.className == 'hide') classChanger([appData.navigation],[appData.openButton]);
+};
 
+function classChanger(addClassesArray,removeClassesArray,){
+   if(addClassesArray)addClassesArray.forEach(num=>num.classList.add('remove-card'))
+   if(removeClassesArray)removeClassesArray.forEach(num=>num.classList.remove('remove-card'));
+};
+
+appData.friendsContainer.addEventListener('click', flipCard);
+appData.navigation.addEventListener('click', usersFilter);
 appData.navigation.addEventListener('keyup', inputSearch);
-appData.openButton.addEventListener('click', ({target}) => {
-  appData.openButton.classList.add('remove-card');
-  appData.navigation.classList.remove('remove-card');
-  appData.openButton.classList.remove('forOpen');
-});
-
-appData.navBar.addEventListener('click', ({target}) => {
-  function classChanger(friends) {
-    if (friends == 'home') document.querySelectorAll('.navigation,.open').forEach(num => num.classList.remove('remove-card'));
-    else document.querySelectorAll('.navigation,.open').forEach(num => num.classList.add('remove-card'));
-  }
-  if (target.className == 'request') {
-    renderNewFlist(arrayOfAddFriends);
-    classChanger();
-  }
-  if (target.className == 'people') {
-    renderNewFlist(resetArray);
-    classChanger('home');
-  }
-});
-
-const initFriendsList = () => {
-		fetch(API_URL)
-		.then((response) => response.json())
-		.then(({results}) => {
-			initialFriendsList = results
-
-			renderFriendsList(initialFriendsList)
-		})
-		.catch(error => console.log(`Parsing is failed with ${error}`))
-	}
+appData.openButton.addEventListener('click',()=>classChanger([appData.openButton],[appData.navigation]));
+appData.navBar.addEventListener('click', tabChanger);
