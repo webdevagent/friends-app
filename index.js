@@ -6,15 +6,16 @@ const appData={
    navigation: document.querySelector('.navigation'),
    navBar:document.querySelector('.nav-bar')
  }
+ const arrayOfAddFriends = [];
+ const resetArray=[];
  let Users = [];
- let arrayOfAddFriends = [];
- let resetArray;
+
 
 getFriendsData.then(response => response.json())
   .then(data => {
     fillUsers(data.results);
-    resetArray = Users.slice();
-  });
+    resetArray = Users.forEach(num=>resetArray.push(num));
+  }).catch(error => console.log(error));
 
 function createCard(element, className, parrent) {
   let card = document.createElement(element);
@@ -146,3 +147,14 @@ appData.navBar.addEventListener('click', ({target}) => {
     classChanger('home');
   }
 });
+
+const initFriendsList = () => {
+		fetch(API_URL)
+		.then((response) => response.json())
+		.then(({results}) => {
+			initialFriendsList = results
+
+			renderFriendsList(initialFriendsList)
+		})
+		.catch(error => console.log(`Parsing is failed with ${error}`))
+	}
