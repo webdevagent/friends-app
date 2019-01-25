@@ -1,20 +1,19 @@
 const FRIENDS_API_URL = "https://randomuser.me/api/?results=40";
 const getFriendsData = fetch(FRIENDS_API_URL);
-const appData={
-   friendsContainer:document.querySelector('.friends'),
-   openButton: document.querySelector('.open'),
-   navigation: document.querySelector('.navigation'),
-   navBar:document.querySelector('.nav-bar')
- }
- const arrayOfAddFriends = [];
- const resetArray=[];
- let Users = [];
-
+const appData = {
+  friendsContainer: document.querySelector('.friends'),
+  openButton: document.querySelector('.open'),
+  navigation: document.querySelector('.navigation'),
+  navBar: document.querySelector('.nav-bar')
+}
+const arrayOfAddFriends = [];
+const resetArray = [];
+let Users = [];
 
 getFriendsData.then(response => response.json())
   .then(data => {
     fillUsers(data.results);
-    Users.forEach(num=>resetArray.push(num));
+    Users.forEach(num => resetArray.push(num));
   }).catch(error => console.log(error));
 
 function createCard(element, className, parrent) {
@@ -48,7 +47,7 @@ function makeProfileCard(person) {
 };
 
 function fillUsers(userData) {
-    userData.forEach((num, i) => {
+  userData.forEach((num, i) => {
     Users.push(makeProfileCard(num));
     Users[i].dataset.order = i;
     ['.flip-box-inner', '.flip-box-front', '.flip-box-back', 'img'].forEach(num => Users[i].querySelector(num).dataset.order = i);
@@ -69,7 +68,7 @@ function flipCard({target}) {
   }
 };
 
-function inputSearch({target}) {
+function inputSearch(target) {
   if (target.className == 'myInput') {
     let value = target.value.toUpperCase();
     let names = appData.friendsContainer.querySelectorAll('.name');
@@ -104,40 +103,44 @@ function renderNewFlist(pushArray) {
   if (pushArray != undefined) pushArray.forEach(num => appData.friendsContainer.appendChild(num));
 };
 
- function tabChanger({target}){
+function tabChanger({target}) {
   if (target.className == 'request') {
     renderNewFlist(arrayOfAddFriends);
     classChanger(document.querySelectorAll('.navigation,.open'));
   }
   if (target.className == 'people') {
     renderNewFlist(resetArray);
-    classChanger(false,document.querySelectorAll('.navigation,.open'));
+    classChanger(false, document.querySelectorAll('.navigation,.open'));
   }
 };
 
-function usersFilter({target}){
-  if (target.className == 'a-z' || target.className == 'z-a') sortListDir(target);
-  if (target.className == 'full-age' || target.className == 'not-full') {
-    (target.className == 'full-age') ? Users.sort(ageSortMG): Users.sort(ageSortGM);
+function usersFilter(actionEvent) {
+  if (actionEvent.type == 'keyup') inputSearch(actionEvent.target);
+  if (actionEvent.target.className == 'a-z' || actionEvent.target.className == 'z-a') sortListDir(actionEvent.target);
+  if (actionEvent.target.className == 'full-age' || actionEvent.target.className == 'not-full') {
+    (actionEvent.target.className == 'full-age') ? Users.sort(ageSortMG): Users.sort(ageSortGM);
     renderNewFlist(Users);
   };
-  if (target.className == 'male' || target.className == 'female') {
+  if (actionEvent.target.className == 'male' || actionEvent.target.className == 'female') {
     let sortedArray;
-    (target.className == 'male') ? Users = resetArray.filter(num => num.gender == 'male'):
+    (actionEvent.target.className == 'male') ? Users = resetArray.filter(num => num.gender == 'male'):
       Users = resetArray.filter(num => num.gender == 'female');
     renderNewFlist(Users);
   }
-  if (target.className == 'reset') renderNewFlist(resetArray);
-  if (target.className == 'hide') classChanger([appData.navigation],[appData.openButton]);
+  if (actionEvent.target.className == 'reset') renderNewFlist(resetArray);
+  if (actionEvent.target.className == 'hide') classChanger([appData.navigation], [appData.openButton]);
 };
 
-function classChanger(addClassesArray,removeClassesArray,){
-   if(addClassesArray)addClassesArray.forEach(num=>num.classList.add('remove-card'))
-   if(removeClassesArray)removeClassesArray.forEach(num=>num.classList.remove('remove-card'));
+function showNavigation({target}) {
+  classChanger([appData.openButton], [appData.navigation]);
 };
 
+function classChanger(addClassesArray, removeClassesArray, ) {
+  if (addClassesArray) addClassesArray.forEach(num => num.classList.add('remove-card'))
+  if (removeClassesArray) removeClassesArray.forEach(num => num.classList.remove('remove-card'));
+};
+
+['click', 'keyup'].forEach((num, i) => appData.navigation.addEventListener(num, usersFilter));
 appData.friendsContainer.addEventListener('click', flipCard);
-appData.navigation.addEventListener('click', usersFilter);
-appData.navigation.addEventListener('keyup', inputSearch);
-appData.openButton.addEventListener('click',()=>classChanger([appData.openButton],[appData.navigation]));
+appData.openButton.addEventListener('click', showNavigation);
 appData.navBar.addEventListener('click', tabChanger);
